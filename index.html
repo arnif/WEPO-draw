@@ -8,7 +8,6 @@
 </head>
 
 <body>
-  <h1>Go nuts Picasso</h1>
  <div id="container">
       <canvas id="myCanvas" width="800" height="400">
         <p>Unfortunately, your browser is currently unsupported by our web 
@@ -29,7 +28,7 @@
       	<ul class="ul-tools">
       		<li id="white" class="color"></li>
       		<li id="black" class="color"></li>
-      		<li id="green" class="color"></li>
+      		<li id="lime" class="color"></li>
       	</ul>
       	<ul class="ul-tools">
       		<li id="pencil" class="tool">Pencil</li>
@@ -41,10 +40,11 @@
       		<li id="text" class="tool">Text</li>
       		<!-- <li id="circle" class="tool">Circle</li> -->
       	</ul>
+      	<button id="eraser" class="buttons btn-warning">Eraser</button>
       <input type="range" name="lineWidth" id="brush-size" min="1" max="40" value="4">
       <span id="brush-value">4</span>
       <button id="save" class="buttons btn-primary">Save</button>
-      <button id="earase" class="buttons btn-danger">CLEAR</button>
+      <button id="clearBoard" class="buttons btn-danger">CLEAR</button>
   	</div>
     </div>
 </body>

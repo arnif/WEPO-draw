@@ -1,15 +1,31 @@
 $(document).ready( function() {
 	 //alert("hasdi");
 
-  var canvas, context, tool;
+  var canvas, context, tool, tempCanvas, tempContext;
 
   var mousedown = false;
   var mouse = {x:0, y:0}
   var lastMouse = {x:0, y:0}
+  var rect = {};
 
-  var shapeHistory = [];
+  var shapeArr = [];
+  var shape = {
+      lineWidth : 4,
+      lineCap : 'round',
+      strokeStyle : 'black',
+      cord : {x:0, y:0}
+  };
 
-  canvas = document.getElementById('myCanvas');
+  tempCanvas = document.getElementById('myCanvas');
+  tempContext = tempCanvas.getContext('2d');
+
+  var container = tempCanvas.parentNode;
+  canvas = document.createElement('canvas');
+  canvas.id = 'imageTemp';
+  canvas.width = tempCanvas.width;
+  canvas.height = tempCanvas.height;
+  container.appendChild(canvas); 
+
   context = canvas.getContext('2d');
 
 
@@ -19,20 +35,34 @@ $(document).ready( function() {
 
   function setup() {
     
+    tool = 'pencil';
     context.lineWidth = 4;
     context.lineCap = 'round';
     context.strokeStyle = 'black';
+    context.fillStyle = 'black';
+    canvas.style.cursor = 'crosshair';
   
+  }
+
+  function imgUpdate() {
+    tempContext.drawImage(canvas, 0, 0);
+    context.clearRect(0,0, canvas.width, canvas.height);
   }
 
   function onmousedown(ev) {
     mousedown = true;
+    if (tool === 'rect') {
+      rect.startX = ev.pageX - this.offsetLeft;
+      rect.startY = ev.pageY - this.offsetTop;
+    }
     ev.preventDefault();
     //bua til nytt shape object
+    
   }
 
   function onmouseup(ev) {
     mousedown = false;
+    imgUpdate();
     ev.preventDefault();
     //setja shape objectid i array
   }
@@ -44,26 +74,41 @@ $(document).ready( function() {
     mouse.y = ev.pageY - this.offsetTop;
 
     if (mousedown) {
+
+      if(tool === 'rect') {
+        rect.w = (ev.pageX - this.offsetLeft) - rect.startX;
+        rect.h = (ev.pageY - this.offsetTop) - rect.startY ;
+        context.clearRect(0,0,canvas.width,canvas.height);
+      }
       paint(mouse.x,mouse.y);
 
     }
   }
 
   function paint(x,y) {
-    //setja x og y gildi i shape objectid
-    context.beginPath();
-    context.moveTo(lastMouse.x, lastMouse.y);
-    context.lineTo(x, y);
-    context.stroke();
-    context.closePath();
+    //setja x og y gildi i shape objectid (array af x og y)
+
+    if (tool === 'pencil') {
+      context.beginPath();
+      context.moveTo(lastMouse.x, lastMouse.y);
+      context.lineTo(x, y);
+      context.stroke();
+      context.closePath();
+
+    } else if (tool === 'rect') {
+      context.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
+
+      // context.stroke();
+      // context.closePath();
+    }
   }
 
 
-  $("#earase").click( function () {
-    earaseBoard();
+  $("#clearBoard").click( function () {
+    clearBoard();
   })
 
-  function earaseBoard() {
+  function clearBoard() {
     canvas.width = canvas.width;
     setup();
   }
@@ -74,15 +119,31 @@ $(document).ready( function() {
     context.lineWidth = $("#brush-size").val();
   });
 
+  $("#eraser").click( function() {
+    context.strokeStyle = 'white';
+    context.lineCap = 'round';
+    tool = 'pencil';
+  });
+
   $(".color").click( function() {
     // console.log(this.id);
     context.strokeStyle = this.id;
-  })
+    context.fillStyle = this.id;
+  });
 
+  $("#pencil").click( function() {
+    // console.log("pensil");
+    context.lineCap = 'round';
+    tool = 'pencil';
+  });
 
+  $("#rect").click( function() {
+    // console.log("rect");
+    context.lineCap = 'round';
+    tool = 'rect';
+  });
+  
 
 setup();
-
-
 	
 });

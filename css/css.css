@@ -2,6 +2,16 @@ ul li {
 	list-style: none;
 }
 
+#container {
+	position: relative;
+}
+
+#imageTemp {
+	position: absolute;
+	top: 1px;
+	left: 1px;
+}
+
 #myCanvas {
 	border: 1px solid black;
 	border-radius: 10px;
@@ -54,6 +64,6 @@ ul li {
 #black {
 	background-color: black;
 }
-#green {
-	background-color: green;
+#lime {
+	background-color: lime;
 }
