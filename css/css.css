@@ -1,0 +1,55 @@
+ul li {
+	list-style: none;
+}
+
+#myCanvas {
+	border: 1px solid black;
+	border-radius: 10px;
+	float:left;
+
+}
+
+#tool-box {
+	width:120px;
+	height: auto;
+	padding-left: 20px;
+	float:left;
+}
+
+.buttons {
+	
+	bottom:0;
+}
+
+.ul-tools {
+	float:left;
+}
+
+.color {
+	width:25px;
+	height:25px;
+	border: 1px solid black;
+	border-radius: 4px;
+	margin:4px;
+}
+
+/*COLORS*/
+
+#red-color {
+	background-color: red;
+}
+#blue-color {
+	background-color: blue;
+}
+#yellow-color {
+	background-color: yellow;
+}
+#white-color {
+	background-color: white;
+}
+#black-color {
+	background-color: black;
+}
+#green-color {
+	background-color: green;
+}
