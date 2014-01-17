@@ -79,7 +79,7 @@ $(document).ready( function() {
         rect.w = (ev.pageX - this.offsetLeft) - rect.startX;
         rect.h = (ev.pageY - this.offsetTop) - rect.startY ;
         context.clearRect(0,0,canvas.width,canvas.height);
-      }
+      } 
       paint(mouse.x,mouse.y);
 
     }
@@ -100,6 +100,11 @@ $(document).ready( function() {
 
       // context.stroke();
       // context.closePath();
+    } else if (tool === 'circle') {
+      context.clearRect(0,0,canvas.width,canvas.height);
+      context.beginPath();
+      context.arc(x,y,100,0,Math.PI*2,true);
+      context.stroke();
     }
   }
 
@@ -109,7 +114,9 @@ $(document).ready( function() {
   })
 
   function clearBoard() {
+    tempCanvas.width = tempCanvas.width;
     canvas.width = canvas.width;
+
     setup();
   }
 
@@ -127,21 +134,37 @@ $(document).ready( function() {
 
   $(".color").click( function() {
     // console.log(this.id);
+    $(".color").removeClass("selected");
+    $("#"+this.id).addClass("selected");
     context.strokeStyle = this.id;
     context.fillStyle = this.id;
   });
 
-  $("#pencil").click( function() {
-    // console.log("pensil");
-    context.lineCap = 'round';
-    tool = 'pencil';
+  $(".tool").click( function() {
+    $(".tool").removeClass("selected");
+    $("#"+this.id).addClass("selected");
+    tool = this.id;
   });
 
-  $("#rect").click( function() {
-    // console.log("rect");
-    context.lineCap = 'round';
-    tool = 'rect';
-  });
+  // $("#pencil").click( function() {
+  //   // console.log("pensil");
+  //   context.lineCap = 'round';
+  //   tool = 'pencil';
+  // });
+
+  // $("#rect").click( function() {
+  //   // console.log("rect");
+  //   context.lineCap = 'round';
+  //   tool = 'rect';
+  // });
+
+  // $("#circle").click( function() {
+  //   // console.log("rect");
+  //   context.lineCap = 'round';
+  //   tool = 'circle';
+  // });
+
+
   
 
 setup();

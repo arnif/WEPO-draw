@@ -47,6 +47,10 @@ ul li {
 	width:70%;
 }
 
+.selected {
+	box-shadow: 0px 0px 5px #000;
+}
+
 /*COLORS*/
 
 #red {
