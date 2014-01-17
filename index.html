@@ -22,14 +22,14 @@
       </canvas>
       <div id="tool-box">
       	<ul class="ul-tools">
-      		<li id="red-color" class="color"></li>
-      		<li id="blue-color" class="color"></li>
-      		<li id="yellow-color" class="color"></li>
+      		<li id="red" class="color"></li>
+      		<li id="blue" class="color"></li>
+      		<li id="yellow" class="color"></li>
       	</ul>
       	<ul class="ul-tools">
-      		<li id="white-color" class="color"></li>
-      		<li id="black-color" class="color"></li>
-      		<li id="green-color" class="color"></li>
+      		<li id="white" class="color"></li>
+      		<li id="black" class="color"></li>
+      		<li id="green" class="color"></li>
       	</ul>
       	<ul class="ul-tools">
       		<li id="pencil" class="tool">Pencil</li>
@@ -41,7 +41,8 @@
       		<li id="text" class="tool">Text</li>
       		<!-- <li id="circle" class="tool">Circle</li> -->
       	</ul>
-      <input type="range" name="lineWidth" min="1" max="20">
+      <input type="range" name="lineWidth" id="brush-size" min="1" max="40" value="4">
+      <span id="brush-value">4</span>
       <button id="save" class="buttons btn-primary">Save</button>
       <button id="earase" class="buttons btn-danger">CLEAR</button>
   	</div>

@@ -33,23 +33,27 @@ ul li {
 	margin:4px;
 }
 
+#brush-size {
+	width:70%;
+}
+
 /*COLORS*/
 
-#red-color {
+#red {
 	background-color: red;
 }
-#blue-color {
+#blue {
 	background-color: blue;
 }
-#yellow-color {
+#yellow {
 	background-color: yellow;
 }
-#white-color {
+#white {
 	background-color: white;
 }
-#black-color {
+#black {
 	background-color: black;
 }
-#green-color {
+#green {
 	background-color: green;
 }

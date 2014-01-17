@@ -7,6 +7,8 @@ $(document).ready( function() {
   var mouse = {x:0, y:0}
   var lastMouse = {x:0, y:0}
 
+  var shapeHistory = [];
+
   canvas = document.getElementById('myCanvas');
   context = canvas.getContext('2d');
 
@@ -19,18 +21,20 @@ $(document).ready( function() {
     
     context.lineWidth = 4;
     context.lineCap = 'round';
-    context.strokeStyle = 'rgb(0, 0, 50)';
+    context.strokeStyle = 'black';
   
   }
 
   function onmousedown(ev) {
     mousedown = true;
     ev.preventDefault();
+    //bua til nytt shape object
   }
 
   function onmouseup(ev) {
     mousedown = false;
     ev.preventDefault();
+    //setja shape objectid i array
   }
 
   function onmousemove(ev) {
@@ -40,13 +44,13 @@ $(document).ready( function() {
     mouse.y = ev.pageY - this.offsetTop;
 
     if (mousedown) {
-      // console.log(x);
       paint(mouse.x,mouse.y);
+
     }
   }
 
   function paint(x,y) {
-
+    //setja x og y gildi i shape objectid
     context.beginPath();
     context.moveTo(lastMouse.x, lastMouse.y);
     context.lineTo(x, y);
@@ -63,6 +67,17 @@ $(document).ready( function() {
     canvas.width = canvas.width;
     setup();
   }
+
+  $("#brush-size").on('change', function() {
+    // console.log($("#brush-size").val());
+    $("#brush-value").html($("#brush-size").val());
+    context.lineWidth = $("#brush-size").val();
+  });
+
+  $(".color").click( function() {
+    // console.log(this.id);
+    context.strokeStyle = this.id;
+  })
 
 
 
