@@ -26,6 +26,11 @@ ul li {
 	float:left;
 }
 
+#text-box {
+	position: absolute;
+	display: none;
+}
+
 .buttons {
 	
 	bottom:0;
