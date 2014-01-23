@@ -1,16 +1,21 @@
 $(document).ready( function() {
 
-  var canvas, context, tool, tempCanvas, tempContext;
+  var canvas, context, tool = 'pencil', tempCanvas, tempContext;
 
   var mousedown = false;
-  var mouse = {x:0, y:0}
+  var mouse = {x:0, y:0, finalX:0, finalY:0}
   var lastMouse = {x:0, y:0}
   var startX = 0;
   var startY = 0;
-  
+
   var w = 0;
   var h = 0;
   var r = 0;
+  var text;
+  var filled = false;
+  var redoArr = [];
+  var fontsize;
+  var fontName;
 
   var tempShape;
   var shapeArr = [];
@@ -19,17 +24,24 @@ $(document).ready( function() {
     this.lineWidth = context.lineWidth;
     this.lineCap = context.lineCap;
     this.strokeStyle = context.strokeStyle;
+    this.filleStyle = context.fillStyle;
     this.tool = tool;
-    this.cordX = this.mouse.x;
-    this.cordY = this.mouse.y;
-      // lineWidth : 4,
-      // lineCap : 'round',
-      // strokeStyle : 'black',
-      // tool : 'pencil',
-      // cord : {x:0, y:0},
-      // w: 0,
-      // h: 0,
-      // r: 0
+    this.startX = startX;
+    this.startY = startY;
+    this.mouseX = mouse.x;
+    this.mouseY = mouse.y;
+    this.finalX = mouse.finalX;
+    this.finalY = mouse.finalY;
+    this.w = w;
+    this.h = h;
+    this.r = r;
+    this.cord = [];
+    this.lastCord = [];
+    this.filled = filled;
+    this.text = text;
+    this.fontsize = fontsize;
+    this.fontName = fontName;
+
   };
 
   tempCanvas = document.getElementById('myCanvas');
@@ -50,16 +62,19 @@ $(document).ready( function() {
 
   function setup() {
     
-    tool = 'pencil';
+    var colorrr = $(".selected").attr('id');
+    tool = tool;
     context.lineWidth = 4;
     context.lineCap = 'round';
-    context.strokeStyle = 'black';
-    context.fillStyle = 'black';
+    context.strokeStyle = colorrr;
+    context.fillStyle = colorrr;
     canvas.style.cursor = 'crosshair';
-    $(".selected").removeClass("selected");
-    $("#pencil").addClass("selected");
-    $("#black").addClass("selected");
-    $("#brush-value").html("4");
+    context.font = fontsize + " " + fontName;
+
+        // $(".selected").removeClass("selected");
+    // $("#pencil").addClass("selected");
+    // $("#black").addClass("selected");
+    // $("#brush-value").html("4");
 
   }
 
@@ -73,14 +88,17 @@ $(document).ready( function() {
     startX = ev.pageX - this.offsetLeft;
     startY = ev.pageY - this.offsetTop;
 
+    redoArr = [];
     if (tool === 'text') {
         $("#text-box").show();
         $("#text-box").css("top", mouse.y);
         $("#text-box").css("left", mouse.x);
         $("#text-box").focus();
-      }
+      } else {
     //bua til nytt shape object
-    tempShape = new shape;
+    
+      tempShape = new shape();
+      }
     
   }
 
@@ -90,9 +108,15 @@ $(document).ready( function() {
     mouse.finalY = ev.pageY - this.offsetTop;
     if (tool === 'text') {
       $("#text-box").focus();
-    }
-    imgUpdate();
+    }  else {
     //setja shape objectid i array
+    // console.log(tempShape);
+    shapeArr.push(tempShape);
+
+  }
+    
+    imgUpdate();
+    
   }
 
   function onmousemove(ev) {
@@ -100,15 +124,24 @@ $(document).ready( function() {
     lastMouse.y = mouse.y;
     var x = mouse.x = ev.pageX - this.offsetLeft;
     var y = mouse.y = ev.pageY - this.offsetTop;
-
+    
     if (mousedown) {
 
+      $("#redo").prop('disabled', true);
+      filled = $("#filled").is(':checked');
+      
       if(tool === 'rect') {
 
-        var w = (ev.pageX - this.offsetLeft) - startX;
-        var h = (ev.pageY - this.offsetTop) - startY ;
+        w = (ev.pageX - this.offsetLeft) - startX;
+        h = (ev.pageY - this.offsetTop) - startY ;
         context.clearRect(0,0,canvas.width,canvas.height);
-        context.strokeRect(startX, startY, w, h);
+        if (filled) {
+          context.fillRect(startX, startY, w, h);
+        } else {
+          context.strokeRect(startX, startY, w, h);
+        }
+
+        tempShape = new shape();
 
       } else if (tool === 'pencil') {
 
@@ -117,16 +150,26 @@ $(document).ready( function() {
         context.lineTo(x, y);
         context.stroke();
         context.closePath();
+        tempShape.cord.push({"x": x, "y":y});
+        tempShape.lastCord.push({"lastX": lastMouse.x, "lastY": lastMouse.y});
+
 
       } else if (tool === 'circle') {
 
         var cx = (ev.pageX - this.offsetLeft) - startX;
         var cy = (ev.pageY - this.offsetTop) - startY;
+        r = Math.abs(cy + cx);
         context.clearRect(0,0,canvas.width,canvas.height);
         context.beginPath();
-        context.arc(startX, startY, Math.abs(cy + cx) ,0,Math.PI*2,true);
-        context.stroke();
+        context.arc(startX, startY, r ,0,Math.PI*2,true);
+        if (filled) {
+          context.fill();
+        } else {
+          context.stroke();
+        }
         context.closePath();
+
+        tempShape = new shape();
 
       } else if (tool === 'line') {
 
@@ -136,35 +179,153 @@ $(document).ready( function() {
         context.lineTo(x, y);
         context.stroke();
 
+        tempShape = new shape();
+
+
       } else if (tool === 'text') {
 
         $("#text-box").show();
         $("#text-box").css("top", mouse.y);
         $("#text-box").css("left", mouse.x);
         $("#text-box").focus();
+        
+      }
+    }
+  }
 
-        $("#text-box").keyup(function(e) {
+  $("#text-box").keyup(function(e) {
           
           if (e.keyCode === 13) {
-            context.font = "14px Helvetica ";
-            var text = $("#text-box").val();
+            
+            fontsize = $("#font-size").val();
+            fontName = $("#font-selector").val();
+            context.font = fontsize + "px "+  fontName;
+
+            text = $("#text-box").val();
             context.fillText(text, mouse.finalX, mouse.finalY);
             imgUpdate();
             $("#text-box").val("");
             $("#text-box").hide();
-         
+            
+            tempShape = new shape();
+            shapeArr.push(tempShape);
+            console.log(shapeArr);
+            
           } else if (e.keyCode === 27) {
 
             $("#text-box").val("");
             $("#text-box").hide();
           }
-
         });
 
-      }
+  function drawFomArray() {
 
+    for (var i = 0; i < shapeArr.length; i++) {
+      context.beginPath();
+      context.lineWidth = shapeArr[i].lineWidth;
+      context.lineCap = shapeArr[i].lineCap;
+      context.strokeStyle = shapeArr[i].strokeStyle;
+      context.fillStyle = shapeArr[i].strokeStyle;
+
+      if (shapeArr[i].tool === 'rect') {
+
+        if (shapeArr[i].filled) {
+          context.fillRect(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].w, shapeArr[i].h);
+        } else {
+          context.strokeRect(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].w, shapeArr[i].h);
+        }
+        
+
+      } else if (shapeArr[i].tool === 'pencil') {
+        // console.log(shapeArr[i]);
+
+        for (var j = 0; j < shapeArr[i].cord.length; j++) {
+          // console.log(shapeArr[i].lastCord[j]);
+          // context.beginPath();
+          context.moveTo(shapeArr[i].cord[j].x, shapeArr[i].cord[j].y);
+          context.lineTo(shapeArr[i].lastCord[j].lastX, shapeArr[i].lastCord[j].lastY);
+
+          context.stroke();
+          // context.closePath();
+        }
+
+      } else if (shapeArr[i].tool === 'circle') {
+        
+        context.arc(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].r ,0,Math.PI*2,true);
+        
+        if (shapeArr[i].filled) {
+          context.fill();
+        } else {
+          context.stroke();
+        }
+        
+      } else if (shapeArr[i].tool === 'line') {
+        // context.beginPath();
+          context.moveTo(shapeArr[i].startX, shapeArr[i].startY);
+          context.lineTo(shapeArr[i].mouseX, shapeArr[i].mouseY);
+          context.stroke();
+        // context.closePath();
+
+      } else if (shapeArr[i].tool === 'text') {
+          fontsize = shapeArr[i].fontsize;
+          fontName = shapeArr[i].fontName;
+          context.font = fontsize + "px "+  fontName;
+
+          text = shapeArr[i].text;
+          context.fillText(text, shapeArr[i].finalX, shapeArr[i].finalY);
+      }
+      context.closePath();
     }
   }
+
+  function undo() {
+    if (shapeArr.length === 0){
+      console.log("notning to undo")
+      $("#undo").prop('disabled', true);
+      $("#redo").prop('disabled', false);
+    } else {
+    $("#redo").prop('disabled', false);
+    redoArr.push(shapeArr.pop());
+    console.log(redoArr);
+    tempCanvas.width = tempCanvas.width;
+    canvas.width = canvas.width;
+    drawFomArray();
+    setup();
+    imgUpdate();
+    console.log(shapeArr.length)
+    }
+  }
+
+  function redo() {
+    console.log("shapeArr");
+ 
+    if (redoArr.length === 0) {
+      console.log("nothing to redo");
+      $("#redo").prop('disabled', true);
+      $("#undo").prop('disabled', false);
+    } else {
+    shapeArr.push(redoArr.pop());
+
+    tempCanvas.width = tempCanvas.width;
+    canvas.width = canvas.width;
+    drawFomArray();
+    setup();
+    imgUpdate();
+    } 
+  }
+
+  $("#undo").click( function() {
+    // console.log("redoArr");
+    undo();
+    
+  });
+
+   $("#redo").click( function() {
+    
+    redo();
+
+  });
+
 
   $("#clearBoard").click( function () {
     clearBoard();
@@ -175,6 +336,7 @@ $(document).ready( function() {
     if (areYouSure) {
       tempCanvas.width = tempCanvas.width;
       canvas.width = canvas.width;
+      context.lineWidth = $("#brush-size").val();
       setup();
     } 
   }
@@ -209,5 +371,26 @@ $(document).ready( function() {
   });
 
 setup();
+
+
+//SpeechRecognition support!
+
+if (annyang) {
+
+  var commands = {
+    'undo': function () {
+      undo();
+    },
+    'redo': function() {
+      redo();
+    }
+  };
+
+  annyang.addCommands(commands);
+
+  annyang.start();
+
+}
+
 
 });

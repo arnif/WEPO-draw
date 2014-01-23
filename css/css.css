@@ -16,13 +16,21 @@ ul li {
 	border: 1px solid black;
 	border-radius: 10px;
 	float:left;
-
 }
 
 #tool-box {
-	width:120px;
+	width:200px;
 	height: auto;
 	padding-left: 20px;
+	float:left;
+}
+
+#main-tools {
+	float:left;
+	margin-bottom: 25px;
+}
+
+#buttons-tools {
 	float:left;
 }
 
@@ -48,12 +56,29 @@ ul li {
 	margin:4px;
 }
 
+#brush {
+	position: absolute;
+	top:165px;
+}
+
 #brush-size {
-	width:70%;
+	width: 150px;
+}
+
+#filled {
+	float:left;
 }
 
 .selected {
 	box-shadow: 0px 0px 5px #000;
+}
+#font-selector {
+	width:110px;
+	float:left;
+}
+#font-size {
+	float:left;
+	width:80px;
 }
 
 /*COLORS*/
