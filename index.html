@@ -1,10 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<title>Teikna</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="css/css.css">
 	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+  
 </head>
 
 <body>
@@ -21,66 +24,102 @@
           href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>.</p>
       </canvas>
       <input type="text" id="text-box" \>
-      <div id="tool-box">
-      	<ul class="ul-tools">
-      		<li id="red" class="color"></li>
-      		<li id="blue" class="color"></li>
-      		<li id="yellow" class="color"></li>
-      	</ul>
-      	<ul class="ul-tools">
-      		<li id="white" class="color"></li>
-      		<li id="black" class="color selected"></li>
-      		<li id="lime" class="color"></li>
-      	</ul>
-      	<div id="main-tools">
-      	<ul class="ul-tools">
-      		<li id="pencil" class="tool selected">Pencil</li>
-      		<li id="rect" class="tool">Rect</li>
-      		<li id="circle" class="tool">Circle</li>
-      	</ul>
-      	<ul class="ul-tools">
-      		<li id="line" class="tool">line</li>
-      		<li id="text" class="tool">Text</li>
-      		<!-- <li id="circle" class="tool">Circle</li> -->
-      	</ul>
-<input type="checkbox" id="filled"> Filled</input>
-      	<span id="brush">Brush size:</span>
-      	      <input type="range" name="lineWidth" id="brush-size" min="1" max="40" value="4">
-      <span id="brush-value">4</span>
 
-      </div>
 
-      	<select id="font-selector">
-      		<option value="Helvetica">Helvetica</option>
-      		<option value="Comic Sans MS">Comic Sans</option>
-      		<option value="Verdana">Verdana</option>
-      		<option value="Arial">Arial</option>
-      		<option value="Impact">Impact</option>
-      		<option value="Tahoma">Tahoma</option>
-      	</select>
-      	<select id="font-size">
-      		<option value="10">10 px</option>
-      		<option value="12">12 px</option>
-      		<option value="14">14 px</option>
-      		<option value="18">18 px</option>
-      		<option value="24">24 px</option>
-      		<option value="36">36 px</option>
-      		<option value="42">42 px</option>
-      		<option value="50">50 px</option>
-      		<option value="60">60 px</option>
-      		<option value="70">70 px</option>
-      		<option value="80">80 px</option>
-      	</select>
-
-      	<div id="buttons-tools">
-      <button id="eraser" class="buttons btn-warning">Eraser</button>
-      <button id="save" class="buttons btn-primary">Save</button>
-      <button id="clearBoard" class="buttons btn-danger">CLEAR</button>
-      <button id="undo" class="buttons btn">undo</button>
-      <button id="redo" class="buttons btn">redo</button>
-  </div>
-  	</div>
     </div>
+<div id="tool-box">
+
+  <div id="tools">
+  <div class="list-group">
+  <a href="#" id="pencil" class="tool list-group-item active"><span class="glyphicon glyphicon-pencil"></span>Pencil</a>
+  <a href="#" id="rect" class="tool list-group-item"><span class="glyphicon glyphicon-stop"></span>Rectangle</a>
+  <a href="#" id="circle" class="tool list-group-item"><span class="glyphicon glyphicon-dashboard"></span>Circle</a>
+  <a href="#" id="line" class="tool list-group-item"><span class="glyphicon glyphicon-minus"></span>Line</a>
+  <a href="#" id="text" class="tool list-group-item"><span class="glyphicon glyphicon-font"></span>Text</a>
+  <a href="#" id="select" class="tool list-group-item"><span class="glyphicon glyphicon-hand-up"></span>Select</a>
+  </div>
+</div>
+
+
+  <div class="btn-group btn-group-lg">
+    <button id="clearBoard" class="buttons btn btn-lg btn-primary"> <span class="glyphicon glyphicon-star"></span>New</button>
+    <button id="load" class="buttons btn btn-lg btn-info"><span class="glyphicon glyphicon-floppy-open"></span>Load</button>
+    <button id="save" class="buttons btn btn-lg btn-success"><span class="glyphicon glyphicon-floppy-save"></span>Save</button>
+</div>
+
+  <div class="btn-group btn-group-lg">
+    <button id="undo" class="buttons btn btn-lg"><span class="glyphicon glyphicon-chevron-left"></span>undo</button>
+    <button id="redo" class="buttons btn btn-lg">redo<span class="glyphicon glyphicon-chevron-right"></span></button>
+  </div>
+
+
+  <div class="btn-group dropup">
+     <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
+        <span id="currColor">Black</span> <span class="caret"></span>
+      </button>
+    <ul class="dropdown-menu" role="menu">
+      <li id="red" class="color"><span class="cText">Red</span></li>
+      <li id="blue" class="color"><span class="cText">Blue</span></li>
+      <li id="yellow" class="color"><span class="cText">Yellow</span></li>
+      <li id="white" class="color"><span class="cText">White</span></li>
+      <li id="black" class="color"><span class="cText">Black</span></li>
+      <li id="lime" class="color"><span class="cText">Lime</span></li>
+    </ul>
+  </div>
+
+<span id="brush">Brush size:</span>
+<input type="range" name="lineWidth" id="brush-size" min="1" max="40" value="4">
+<span id="brush-value">4</span>
+
+<span id="filler"><input type="checkbox" id="filled"> Filled</input></span>
+  <select id="font-selector" class="change-font">
+          <option value="Helvetica">Helvetica</option>
+          <option value="Comic Sans MS">Comic Sans</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Arial">Arial</option>
+          <option value="Impact">Impact</option>
+          <option value="Tahoma">Tahoma</option>
+        </select>
+        <select id="font-size" class="change-font">
+          <option value="10">10 px</option>
+          <option value="12">12 px</option>
+          <option value="14">14 px</option>
+          <option value="18">18 px</option>
+          <option value="24">24 px</option>
+          <option value="36">36 px</option>
+          <option value="42">42 px</option>
+          <option value="50">50 px</option>
+          <option value="60">60 px</option>
+          <option value="70">70 px</option>
+          <option value="80">80 px</option>
+        </select>
+
+</div>
+
+
+
+    <div id="blackout"></div>
+
+  <div id="saveBox" class="overlay-box">
+  <h3>Save image</h3>
+  <input id="artist-name" type="text" placeholder="Artist Name" />
+  <input id="drawing-name" type="text" placeholder="Drawing Name" />
+  <p id="save-result"></p>
+  <div id="save-btns">
+  <button id="saveOK" class="save-btn btn btn-lg btn-primary">OK</button>
+  <button class="cancel save-btn btn btn-lg btn-danger">cancel</button>
+  </div>
+</div>
+
+<div id="loadBox" class="overlay-box">
+  <h3>Load image</h3>
+  <input id="artist-name-load" type="text" placeholder="Artist Name" />
+  <div id="load-result"></div>
+  <div id="save-btns">
+  <button id="search" class="save-btn btn btn-lg btn-primary">Search</button>
+  <button class="cancel save-btn btn btn-lg btn-danger">cancel</button>
+</div>
+
 </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>

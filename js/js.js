@@ -60,21 +60,22 @@ $(document).ready( function() {
   canvas.addEventListener('mouseup', onmouseup, false);
   canvas.addEventListener('mousemove', onmousemove, false);
 
+  //uhhh 
+  canvas.addEventListener("touchstart", onmousedown, false);
+  canvas.addEventListener("touchmove", onmousemove, true);
+  canvas.addEventListener("touchend", onmouseup, false);
+
   function setup() {
     
     var colorrr = $(".selected").attr('id');
-    tool = tool;
-    context.lineWidth = 4;
+    tool = tool; 
+    context.lineWidth = $("#brush-size").val();
     context.lineCap = 'round';
     context.strokeStyle = colorrr;
     context.fillStyle = colorrr;
-    canvas.style.cursor = 'crosshair';
-    context.font = fontsize + " " + fontName;
+    // canvas.style.cursor = 'crosshair';
+    context.font = fontsize + "px " + fontName;
 
-        // $(".selected").removeClass("selected");
-    // $("#pencil").addClass("selected");
-    // $("#black").addClass("selected");
-    // $("#brush-value").html("4");
 
   }
 
@@ -89,6 +90,7 @@ $(document).ready( function() {
     startY = ev.pageY - this.offsetTop;
 
     redoArr = [];
+    $("#redo").prop('disabled', true);
     if (tool === 'text') {
         $("#text-box").show();
         $("#text-box").css("top", mouse.y);
@@ -110,11 +112,10 @@ $(document).ready( function() {
       $("#text-box").focus();
     }  else {
     //setja shape objectid i array
-    // console.log(tempShape);
     shapeArr.push(tempShape);
 
-  }
-    
+    }
+
     imgUpdate();
     
   }
@@ -127,7 +128,8 @@ $(document).ready( function() {
     
     if (mousedown) {
 
-      $("#redo").prop('disabled', true);
+      $("#undo").prop('disabled', false);
+
       filled = $("#filled").is(':checked');
       
       if(tool === 'rect') {
@@ -162,6 +164,7 @@ $(document).ready( function() {
         context.clearRect(0,0,canvas.width,canvas.height);
         context.beginPath();
         context.arc(startX, startY, r ,0,Math.PI*2,true);
+
         if (filled) {
           context.fill();
         } else {
@@ -218,128 +221,124 @@ $(document).ready( function() {
           }
         });
 
-  function drawFomArray() {
+  function drawFomArray(arr) { //taka med ser arr????
 
-    for (var i = 0; i < shapeArr.length; i++) {
+    for (var i = 0; i < arr.length; i++) {
       context.beginPath();
-      context.lineWidth = shapeArr[i].lineWidth;
-      context.lineCap = shapeArr[i].lineCap;
-      context.strokeStyle = shapeArr[i].strokeStyle;
-      context.fillStyle = shapeArr[i].strokeStyle;
+      context.lineWidth = arr[i].lineWidth;
+      context.lineCap = arr[i].lineCap;
+      context.strokeStyle = arr[i].strokeStyle;
+      context.fillStyle = arr[i].strokeStyle;
 
-      if (shapeArr[i].tool === 'rect') {
+      if (arr[i].tool === 'rect') {
 
-        if (shapeArr[i].filled) {
-          context.fillRect(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].w, shapeArr[i].h);
+        if (arr[i].filled) {
+          context.fillRect(arr[i].startX, arr[i].startY, arr[i].w, arr[i].h);
         } else {
-          context.strokeRect(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].w, shapeArr[i].h);
+          context.strokeRect(arr[i].startX, arr[i].startY, arr[i].w, arr[i].h);
         }
         
 
-      } else if (shapeArr[i].tool === 'pencil') {
-        // console.log(shapeArr[i]);
+      } else if (arr[i].tool === 'pencil') {
 
-        for (var j = 0; j < shapeArr[i].cord.length; j++) {
-          // console.log(shapeArr[i].lastCord[j]);
-          // context.beginPath();
-          context.moveTo(shapeArr[i].cord[j].x, shapeArr[i].cord[j].y);
-          context.lineTo(shapeArr[i].lastCord[j].lastX, shapeArr[i].lastCord[j].lastY);
+        for (var j = 0; j < arr[i].cord.length; j++) {
 
+          context.moveTo(arr[i].cord[j].x, arr[i].cord[j].y);
+          context.lineTo(arr[i].lastCord[j].lastX, arr[i].lastCord[j].lastY);
           context.stroke();
-          // context.closePath();
+
         }
 
-      } else if (shapeArr[i].tool === 'circle') {
+      } else if (arr[i].tool === 'circle') {
         
-        context.arc(shapeArr[i].startX, shapeArr[i].startY, shapeArr[i].r ,0,Math.PI*2,true);
+        context.arc(arr[i].startX, arr[i].startY, arr[i].r ,0,Math.PI*2,true);
         
-        if (shapeArr[i].filled) {
+        if (arr[i].filled) {
           context.fill();
         } else {
           context.stroke();
         }
         
-      } else if (shapeArr[i].tool === 'line') {
-        // context.beginPath();
-          context.moveTo(shapeArr[i].startX, shapeArr[i].startY);
-          context.lineTo(shapeArr[i].mouseX, shapeArr[i].mouseY);
-          context.stroke();
-        // context.closePath();
+      } else if (arr[i].tool === 'line') {
 
-      } else if (shapeArr[i].tool === 'text') {
-          fontsize = shapeArr[i].fontsize;
-          fontName = shapeArr[i].fontName;
+          context.moveTo(arr[i].startX, arr[i].startY);
+          context.lineTo(arr[i].mouseX, arr[i].mouseY);
+          context.stroke();
+
+      } else if (arr[i].tool === 'text') {
+          fontsize = arr[i].fontsize;
+          fontName = arr[i].fontName;
           context.font = fontsize + "px "+  fontName;
 
-          text = shapeArr[i].text;
-          context.fillText(text, shapeArr[i].finalX, shapeArr[i].finalY);
+          text = arr[i].text;
+          context.fillText(text, arr[i].finalX, arr[i].finalY);
       }
       context.closePath();
     }
   }
 
   function undo() {
+
     if (shapeArr.length === 0){
+
       console.log("notning to undo")
       $("#undo").prop('disabled', true);
       $("#redo").prop('disabled', false);
+
     } else {
+
     $("#redo").prop('disabled', false);
     redoArr.push(shapeArr.pop());
-    console.log(redoArr);
     tempCanvas.width = tempCanvas.width;
     canvas.width = canvas.width;
-    drawFomArray();
+    drawFomArray(shapeArr);
     setup();
     imgUpdate();
-    console.log(shapeArr.length)
     }
   }
 
   function redo() {
-    console.log("shapeArr");
- 
+
     if (redoArr.length === 0) {
+
       console.log("nothing to redo");
       $("#redo").prop('disabled', true);
       $("#undo").prop('disabled', false);
-    } else {
-    shapeArr.push(redoArr.pop());
 
+    } else {
+
+    shapeArr.push(redoArr.pop());
     tempCanvas.width = tempCanvas.width;
     canvas.width = canvas.width;
-    drawFomArray();
+    drawFomArray(shapeArr);
     setup();
     imgUpdate();
     } 
   }
 
   $("#undo").click( function() {
-    // console.log("redoArr");
     undo();
-    
   });
 
    $("#redo").click( function() {
-    
     redo();
-
-  });
-
-
-  $("#clearBoard").click( function () {
-    clearBoard();
   });
 
   function clearBoard() {
     var areYouSure = confirm("Are you sure ?");
     if (areYouSure) {
+      shapeArr = [];
+      redoArr = [];
       tempCanvas.width = tempCanvas.width;
       canvas.width = canvas.width;
-      context.lineWidth = $("#brush-size").val();
+      // context.lineWidth = $("#brush-size").val();
       setup();
     } 
   }
+
+  $("#clearBoard").click( function () {
+    clearBoard();
+  });
 
   $("#brush-size").on('change', function() {
     // console.log($("#brush-size").val());
@@ -356,19 +355,220 @@ $(document).ready( function() {
     tool = 'pencil';
   });
 
+  function changeColor(color) {
+     $(".color").removeClass("selected");
+    $("#eraser").removeClass("selected");
+    $("#"+color).addClass("selected");
+
+    $("#currColor").css("background-color",color);
+    $("#currColor").html(color);
+    if (color === 'black' || color === 'blue') {
+      $("#currColor").css("color","white");
+    } else {
+      $("#currColor").css("color","black");
+    }
+
+    if (tool === 'text') {
+      $("#text-box").focus();
+    }
+
+    context.strokeStyle = color;
+    context.fillStyle = color;
+  }
+
   $(".color").click( function() {
     // console.log(this.id);
-    $(".color").removeClass("selected");
-    $("#"+this.id).addClass("selected");
-    context.strokeStyle = this.id;
-    context.fillStyle = this.id;
+   
+    changeColor(this.id);
   });
 
+  function changeTool(theTool) {
+    $(".tool").removeClass("active");
+    // $("#eraser").removeClass("selected");
+    $("#"+theTool).addClass("active");
+    tool = theTool;
+    if (tool === 'rect' || tool === 'circle') {
+      $("#filler").show();
+    } else {
+      $("#filler").hide();
+    }
+
+  }
+
   $(".tool").click( function() {
-    $(".tool").removeClass("selected");
-    $("#"+this.id).addClass("selected");
-    tool = this.id;
+    // console.log(this.id);
+    changeTool(this.id);
   });
+
+
+
+  function save() {
+
+      var stringifiedArray = JSON.stringify(shapeArr);
+      var param = { 
+        "user": $("#artist-name").val(), // You should use your own username!
+        "name": $("#drawing-name").val(),
+        "content": stringifiedArray,
+        "template": true
+      };
+      console.log(stringifiedArray);
+      $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: "http://whiteboard.apphb.com/Home/Save",
+        data: param,
+        dataType: "jsonp",
+        crossDomain: true,
+        success: function (data) {
+          // The save was successful...
+          $("#save-result").html("Drawing saved...<br>Username: " + param.user);
+          $("#artist-name").val("");
+          $("#drawing-name").val(""),
+          setTimeout(function() { 
+            $("#saveBox").hide();
+            $("#blackout").hide();
+            $("#save-result").html("");
+             }, 2500);
+          console.log(data);
+        },
+        error: function (xhr, err) {
+          // Something went wrong...
+          // console.log(xhr);
+          // console.log(err);
+          $("#save-result").html("Someting went wrong...try again or not...");
+        }
+      });
+
+  }
+
+  $("#save").click( function() {
+    $("#blackout").show();
+    $("#saveBox").show();
+    // save();
+  });
+
+
+  function load(id) {
+    //515
+    //http://whiteboard.apphb.com/Home/GetList
+    //http://whiteboard.apphb.com/Home/GetWhiteboard
+
+    var param = {
+        "id": id
+      };
+      $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: "http://whiteboard.apphb.com/Home/GetWhiteboard",
+        data: param,
+        dataType: "jsonp",
+        crossDomain: true,
+        success: function (data) {
+          // The save was successful...
+          
+          // clearBoard();
+          redoArr = [];
+          canvas.width = canvas.width;
+          tempCanvas.width = tempCanvas.width;
+
+          var object = JSON.parse(data.WhiteboardContents);
+          console.log(object);
+          shapeArr = object;
+          // console.log(shapeArr);
+
+          drawFomArray(shapeArr);
+          setup();
+          imgUpdate();
+
+        },
+        error: function (xhr, err) {
+          // Something went wrong...
+          // console.log(xhr);
+          // console.log(err);
+        }
+      });
+
+
+  }
+
+  $("#load").click( function() {
+        // load();
+      $("#blackout").show();
+      $("#loadBox").show();
+    });
+
+  function getResult(user) {
+     var param = {
+        "user": user, // You should use your own username!
+        "template": true
+      };
+      $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: "http://whiteboard.apphb.com/Home/GetList",
+        data: param,
+        dataType: "jsonp",
+        crossDomain: true,
+        success: function (data) {
+         
+          // The save was successful...
+
+          var resultHTML = $("#load-result");
+          resultHTML.html("");
+          resultHTML.html("<ul>");
+
+          if (jQuery.isEmptyObject(data)){
+            resultHTML.html("Nothing found...");
+          }
+
+          for (var i = 0; i < data.length; i++) {
+            console.log(data[i]);
+            var id = data[i].ID;
+            var name = data[i].WhiteboardTitle;
+            resultHTML.append("<li class='load-data' id=" + id + "><a href=#>" + name + "</a></li>");
+
+          }
+          resultHTML.append("</ul>");
+          // $("#blackout").css("height", "800px");
+          console.log(data);
+
+          $(".load-data").click( function() {
+            $("#blackout").hide();
+            $("#loadBox").hide();
+            load(this.id);
+          });
+
+        },
+        error: function (xhr, err) {
+          // Something went wrong...
+          console.log(xhr);
+          // console.log(err);
+        }
+      });
+  }
+
+  $("#search").click( function() {
+    var user = $("#artist-name-load").val()
+    getResult(user);
+  });
+
+
+  $(".cancel").click( function() {
+    // console.log("wtf");
+    $("#blackout").hide();
+    $(".overlay-box").hide();
+  });
+
+  $("#saveOK").click(function() {
+    save();
+  });
+
+  $(".change-font").on('change', function() {
+    if (tool === 'text') {
+      $("#text-box").focus();
+    }
+  });
+
 
 setup();
 
@@ -376,14 +576,41 @@ setup();
 //SpeechRecognition support!
 
 if (annyang) {
+  console.log("Listening");
 
   var commands = {
     'undo': function () {
       undo();
     },
-    'redo': function() {
+    'redo':function() {
       redo();
+    },
+    'red':function() {
+      changeColor('red');
+    },
+    'blue':function() {
+      changeColor('blue');
+    },
+    'yellow':function() {
+      changeColor('yellow');
+    },
+    'white':function() {
+      changeColor('white');
+    },
+    'black':function() {
+      changeColor('black');
+    },
+    'green':function() {
+      changeColor('green');
+    },
+    'ff00ee':function() {
+      console('heeee');
+      changeColor('ff00ee');
+    },
+    '*term':function(term){
+      console.log(term);
     }
+    
   };
 
   annyang.addCommands(commands);
@@ -391,6 +618,4 @@ if (annyang) {
   annyang.start();
 
 }
-
-
 });
