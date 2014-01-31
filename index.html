@@ -11,7 +11,6 @@
 </head>
 
 <body>
- 	  <!-- <h1>Go nuts Picasso</h1> -->
  <div id="container">
       <canvas id="myCanvas" width="800" height="400">
         <p>Unfortunately, your browser is currently unsupported by our web 
@@ -23,7 +22,7 @@
           href="http://www.apple.com/safari">Safari</a>, and <a 
           href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>.</p>
       </canvas>
-      <input type="text" id="text-box" \>
+      <input type="text" class="form-control" id="text-box" />
 
 
     </div>
@@ -53,25 +52,38 @@
   </div>
 
 
-  <div class="btn-group dropup">
-     <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
-        <span id="currColor">Black</span> <span class="caret"></span>
-      </button>
-    <ul class="dropdown-menu" role="menu">
-      <li id="red" class="color"><span class="cText">Red</span></li>
-      <li id="blue" class="color"><span class="cText">Blue</span></li>
-      <li id="yellow" class="color"><span class="cText">Yellow</span></li>
-      <li id="white" class="color"><span class="cText">White</span></li>
-      <li id="black" class="color"><span class="cText">Black</span></li>
-      <li id="lime" class="color"><span class="cText">Lime</span></li>
+  <span id="currentColor">
+<div class="colors">
+    <ul>
+      <div class="li-left">
+      <li id="1e5aa8" class="color blue"></li>
+      <li id="b40000" class="color red"></li>
+      <li id="ef4a2e" class="color lred"></li>
+      <li id="fac80a" class="color yellow"></li>
+      <li id="000000" class="color black selected"></li>
+      </div>
     </ul>
+  
+
+  <ul>
+    <div class="li-right">
+      <li id="b19f73" class="color lbrown"></li>
+      <li id="b1c93e" class="color lyellow"></li>
+      <li id="6f8298" class="color lblue"></li>
+      <li id="8a928d" class="color grey"></li>
+      <li id="ffffff" class="color white"></li>
+    </div>
+    </ul>
+    
   </div>
+</span>
 
 <span id="brush">Brush size:</span>
-<input type="range" name="lineWidth" id="brush-size" min="1" max="40" value="4">
-<span id="brush-value">4</span>
+<input type="range"  name="lineWidth" id="brush-size" min="1" max="40" value="16">
+<span id="brush-value">16</span>
 
 <span id="filler"><input type="checkbox" id="filled"> Filled</input></span>
+<span id="text-selector">
   <select id="font-selector" class="change-font">
           <option value="Helvetica">Helvetica</option>
           <option value="Comic Sans MS">Comic Sans</option>
@@ -85,7 +97,7 @@
           <option value="12">12 px</option>
           <option value="14">14 px</option>
           <option value="18">18 px</option>
-          <option value="24">24 px</option>
+          <option value="24" selected="selected">24 px</option>
           <option value="36">36 px</option>
           <option value="42">42 px</option>
           <option value="50">50 px</option>
@@ -93,18 +105,18 @@
           <option value="70">70 px</option>
           <option value="80">80 px</option>
         </select>
+      </span>
 
 </div>
-
-
 
     <div id="blackout"></div>
 
   <div id="saveBox" class="overlay-box">
   <h3>Save image</h3>
-  <input id="artist-name" type="text" placeholder="Artist Name" />
-  <input id="drawing-name" type="text" placeholder="Drawing Name" />
-  <p id="save-result"></p>
+  <input id="artist-name" class="form-control" type="text" placeholder="Artist Name" />
+  <input id="drawing-name" class="form-control" type="text" placeholder="Drawing Name" />
+  <div id="save-result">
+  </div>
   <div id="save-btns">
   <button id="saveOK" class="save-btn btn btn-lg btn-primary">OK</button>
   <button class="cancel save-btn btn btn-lg btn-danger">cancel</button>
@@ -113,7 +125,7 @@
 
 <div id="loadBox" class="overlay-box">
   <h3>Load image</h3>
-  <input id="artist-name-load" type="text" placeholder="Artist Name" />
+  <input id="artist-name-load" class="form-control" type="text" placeholder="Artist Name" />
   <div id="load-result"></div>
   <div id="save-btns">
   <button id="search" class="save-btn btn btn-lg btn-primary">Search</button>
