@@ -42,7 +42,6 @@ $(document).ready( function() {
     this.text = text;
     this.fontsize = fontsize;
     this.fontName = fontName;
-    // this.display = true;
 
   };
 
@@ -62,11 +61,6 @@ $(document).ready( function() {
   canvas.addEventListener('mouseup', onmouseup, false);
   canvas.addEventListener('mousemove', onmousemove, false);
 
-  //uhhh nice try
-  canvas.addEventListener("touchstart", onmousedown, false);
-  canvas.addEventListener("touchmove", onmousemove, true);
-  canvas.addEventListener("touchend", onmouseup, false);
-
   function setup() {
 
     cColor = $(".selected").attr('id');
@@ -78,8 +72,6 @@ $(document).ready( function() {
     context.lineJoin = 'round';
     canvas.style.cursor = 'crosshair';
     context.font = fontsize + "px " + fontName;
-
-
   }
 
   function imgUpdate() {
@@ -96,9 +88,7 @@ $(document).ready( function() {
     $("#redo").prop('disabled', true);
     if (tool === 'text') {
 
-        // console.log(fontsize);
         $("#text-box").show();
-
 
         fontName = $("#font-selector").val();
         fontsize = $("#font-size").val();
@@ -151,7 +141,6 @@ function onmouseup(ev) {
       drawFomArray(shapeArr);
 
     }
-    // console.log(shapeArr);
     setup();
     imgUpdate();
     
@@ -192,7 +181,6 @@ function onmouseup(ev) {
           context.closePath();
           tempShape.cord.push({"x": x, "y":y});
           tempShape.lastCord.push({"lastX": mouse.prevMouseX, "lastY": mouse.prevMouseY});
-
 
         } else if (tool === 'circle') {
 
@@ -267,7 +255,6 @@ function onmouseup(ev) {
         }
 
       } else if (shapeArr[sID].tool === 'rect') {
-        // console.log("MOVEIT");
 
         context.clearRect(0,0,canvas.width,canvas.height);
         if (shapeArr[sID].filled) {
@@ -277,7 +264,6 @@ function onmouseup(ev) {
         }
 
       } else if (shapeArr[sID].tool === 'circle') {
-        // console.log("MOVE CIRCL");
 
         context.clearRect(0,0,canvas.width,canvas.height);
         context.beginPath();
@@ -291,8 +277,6 @@ function onmouseup(ev) {
         context.closePath();
 
       } else if (shapeArr[sID].tool === 'line') {
-        // console.log("MOVE LINE");
-
 
         context.clearRect(0,0,canvas.width,canvas.height);
         context.beginPath();
@@ -302,7 +286,7 @@ function onmouseup(ev) {
         context.closePath();
 
       } else if (shapeArr[sID].tool === 'text') {
-        console.log("MOVE TEXT");
+
         fontsize = shapeArr[sID].fontsize;
         fontName = shapeArr[sID].fontName;
         context.font = fontsize + "px "+  fontName;
@@ -319,20 +303,18 @@ function onmouseup(ev) {
 }
 
 function hitTest(startX, startY) {
-  console.log("x:  " + startX + "  y:" + startY);
 
   for (var i = shapeArr.length -1; i >= 0; i--){ 
-      // console.log(shapeArr[i]);
+
       if (shapeArr[i].tool === 'pencil') {
 
         for (var j = 0; j < shapeArr[i].cord.length; j++){
-          // console.log(startY + shapeArr[i].lineWidth);
+
           if (startX + shapeArr[i].lineWidth >= shapeArr[i].cord[j].x 
             && startX - shapeArr[i].lineWidth <= shapeArr[i].cord[j].x
             && startY + shapeArr[i].lineWidth >= shapeArr[i].cord[j].y 
             && startY - shapeArr[i].lineWidth <= shapeArr[i].cord[j].y) {
-            console.log('HIT a pencil');
-          // console.log(i);
+
           sID = i;
           return shapeArr[sID];
 
@@ -341,13 +323,11 @@ function hitTest(startX, startY) {
 
     } else if (shapeArr[i].tool === 'rect') {
         //some calculations to find out if mouse is on rect
-        // console.log(shapeArr[i].startX);
         if ((startX + shapeArr[i].lineWidth >= shapeArr[i].startX && startX + shapeArr[i].lineWidth  <= shapeArr[i].finalX
-          && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)
-          || (startX + shapeArr[i].lineWidth  <= shapeArr[i].startX && startX + shapeArr[i].lineWidth  >= shapeArr[i].finalX
-            && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)){
-          console.log('HIT a rect'); //need fixx!!
-        console.log(shapeArr[i]);
+        && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)
+        || (startX + shapeArr[i].lineWidth  <= shapeArr[i].startX && startX + shapeArr[i].lineWidth  >= shapeArr[i].finalX
+        && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)){
+
         sID = i;
         return shapeArr[sID];
 
@@ -355,8 +335,7 @@ function hitTest(startX, startY) {
         && startY + shapeArr[i].lineWidth >= shapeArr[i].finalY && startY - shapeArr[i].lineWidth  <= shapeArr[i].startY
         || startX + shapeArr[i].lineWidth >= shapeArr[i].finalX && startX + shapeArr[i].lineWidth  <= shapeArr[i].startX
         && startY + shapeArr[i].lineWidth >= shapeArr[i].finalY && startY - shapeArr[i].lineWidth  <= shapeArr[i].startY) {
-        console.log('HIT a rect'); 
-        console.log(shapeArr[i]);
+
         sID = i;
         return shapeArr[sID];
       }
@@ -366,7 +345,7 @@ function hitTest(startX, startY) {
         if ((startX - shapeArr[i].startX) * (startX - shapeArr[i].startX) 
           + (startY - shapeArr[i].startY) * (startY - shapeArr[i].startY) + shapeArr[i].lineWidth 
           < shapeArr[i].r * shapeArr[i].r) {
-          console.log("hit circl");
+        
         sID = i;
         return shapeArr[sID];
       }
@@ -375,24 +354,21 @@ function hitTest(startX, startY) {
         //more calculations
         var hallatala = ((shapeArr[i].mouseY - shapeArr[i].startY) /  (shapeArr[i].mouseX - shapeArr[i].startX));
         var correctQ = (shapeArr[i].mouseY - (hallatala * shapeArr[i].mouseX));
-          // console.log("hallatala " + hallatala);
-          // console.log("Q " + correctQ);
 
-          var callculateQ = (startY - (hallatala * startX));
-          // console.log("callculate Q " +callculateQ);
-          // console.log(shapeArr[i]);
+        var callculateQ = (startY - (hallatala * startX));
+
           if ((startX + shapeArr[i].lineWidth >= shapeArr[i].startX && startX + shapeArr[i].lineWidth  <= shapeArr[i].finalX
-            && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)
-            || (startX + shapeArr[i].lineWidth  <= shapeArr[i].startX && startX + shapeArr[i].lineWidth  >= shapeArr[i].finalX
-              && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)){
-            // console.log("inni kassanum");
+          && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)
+          || (startX + shapeArr[i].lineWidth  <= shapeArr[i].startX && startX + shapeArr[i].lineWidth  >= shapeArr[i].finalX
+          && startY + shapeArr[i].lineWidth  >= shapeArr[i].startY && startY - shapeArr[i].lineWidth  <= shapeArr[i].finalY)){
+           
             if (correctQ + shapeArr[i].lineWidth  >= callculateQ && correctQ  <= callculateQ + shapeArr[i].lineWidth ) {
-              // console.log("hit a line based on Q upp");
+
               sID = i;
               return shapeArr[sID];
 
             } else if (hallatala == Number.POSITIVE_INFINITY || hallatala === Number.NEGATIVE_INFINITY ) {
-                // console.log("To infinity and beyond");
+          
                 sID = i;
                 return shapeArr[sID];
             }
@@ -401,13 +377,14 @@ function hitTest(startX, startY) {
             && startY >= shapeArr[i].finalY && startY <= shapeArr[i].startY
             || startX >= shapeArr[i].finalX && startX <= shapeArr[i].startX
             && startY >= shapeArr[i].finalY && startY <= shapeArr[i].startY) {
-             // console.log("inni kassanum");
+
             if (correctQ + shapeArr[i].lineWidth  >= callculateQ && correctQ  <= callculateQ + shapeArr[i].lineWidth ) {
-              // console.log("hit a line based on Q down");
+
               sID = i;
               return shapeArr[sID];
+
             }  else if (hallatala == Number.POSITIVE_INFINITY || hallatala === Number.NEGATIVE_INFINITY ) {
-                // console.log("To infinity and beyond");
+
                 sID = i;
                 return shapeArr[sID];
             }
@@ -415,15 +392,15 @@ function hitTest(startX, startY) {
 
         } else if (shapeArr[i].tool === 'text') {
         //major calculations
-        console.log(shapeArr[i]);
+
         var textUpperY = shapeArr[i].finalY - parseInt(shapeArr[i].fontsize /1.5);
 
         var metrics = context.measureText(shapeArr[i].text);
         var width = metrics.width;
-        
+
         if (startY <= shapeArr[i].finalY && startY >= textUpperY
           && startX >= shapeArr[i].finalX && startX <= shapeArr[i].finalX + width) {
-          // console.log("hit text");
+
           sID = i;
           return shapeArr[sID];
         }
@@ -441,7 +418,7 @@ function hitTest(startX, startY) {
       context.font = fontsize + "px "+  fontName;
 
       text = $("#text-box").val();
-      context.fillText(text, mouse.finalX, mouse.finalY);
+      context.fillText(text, mouse.finalX, mouse.finalY );
       imgUpdate();
       $("#text-box").val("");
       $("#text-box").hide();
@@ -457,7 +434,6 @@ function hitTest(startX, startY) {
   });
 
   function drawFomArray(arr) { 
-    // console.log(arr);
 
     for (var i = 0; i < arr.length; i++) {
 
@@ -503,12 +479,8 @@ function hitTest(startX, startY) {
         context.stroke();
 
       } else if (arr[i].tool === 'text') {
-        fontsize = arr[i].fontsize;
-        fontName = arr[i].fontName;
-        context.font = fontsize + "px "+  fontName;
-
-        text = arr[i].text;
-        context.fillText(text, arr[i].finalX, arr[i].finalY);
+        context.font = arr[i].fontsize + "px "+  arr[i].fontName;
+        context.fillText(arr[i].text, arr[i].finalX, arr[i].finalY);
       }
       context.closePath();
 
@@ -519,7 +491,6 @@ function hitTest(startX, startY) {
 
     if (shapeArr.length === 0){
 
-      console.log("notning to undo")
       $("#undo").prop('disabled', true);
       $("#redo").prop('disabled', false);
 
@@ -530,7 +501,6 @@ function hitTest(startX, startY) {
       tempCanvas.width = tempCanvas.width;
       canvas.width = canvas.width;
       drawFomArray(shapeArr);
-
       setup();
       imgUpdate();
     }
@@ -540,7 +510,6 @@ function hitTest(startX, startY) {
 
     if (redoArr.length === 0) {
 
-      console.log("nothing to redo");
       $("#redo").prop('disabled', true);
       $("#undo").prop('disabled', false);
 
@@ -555,17 +524,9 @@ function hitTest(startX, startY) {
     } 
   }
 
-  $("#undo").click( function() {
-    undo();
-  });
-
-  $("#redo").click( function() {
-    redo();
-  });
 
   function clearBoard() {
-    var areYouSure = confirm("Are you sure ?");
-    if (areYouSure) {
+    if (confirm("Are you sure ?")) {
       shapeArr = [];
       redoArr = [];
       tempCanvas.width = tempCanvas.width;
@@ -574,12 +535,8 @@ function hitTest(startX, startY) {
     } 
   }
 
-  $("#clearBoard").click( function () {
-    clearBoard();
-  });
 
   $("#brush-size").on('change', function() {
-    // console.log($("#brush-size").val());
     $("#brush-value").html($("#brush-size").val());
     context.lineWidth = $("#brush-size").val();
   });
@@ -599,9 +556,7 @@ function hitTest(startX, startY) {
     context.fillStyle = color;
   }
 
-  $(".color").click( function() {
-    changeColor(this.id);
-  });
+
 
   function changeTool(theTool) {
     $(".tool").removeClass("active");
@@ -620,14 +575,8 @@ function hitTest(startX, startY) {
     }
   }
 
-  $(".tool").click( function() {
-    changeTool(this.id);
-  });
-
-
-
   function save() {
-
+    $(".ajax-load").show();
     var stringifiedArray = JSON.stringify(shapeArr);
     var param = { 
       "user": $("#artist-name").val(), 
@@ -635,7 +584,10 @@ function hitTest(startX, startY) {
       "content": stringifiedArray,
       "template": true
     };
-    console.log(stringifiedArray);
+    if (param.user === "" || param.name === "") {
+      $("#saveBox h3").after("<strong>Please type in Artist name and Drawing name</strong>");
+      return;
+    }
     $.ajax({
       type: "POST",
       contentType: "application/json; charset=utf-8",
@@ -645,6 +597,7 @@ function hitTest(startX, startY) {
       crossDomain: true,
       success: function (data) {
           // The save was successful...
+          $(".ajax-load").hide();
           $("#save-result").show();
           $("#save-result").append("<p>Drawing saved...<br>Username: <b>" + param.user + "</b><br>Name: <b>" + param.name +"</b></p><button class='cancel save-btn btn btn-lg btn-primary'>Ok</button>");
           $("#artist-name").val("");
@@ -654,19 +607,16 @@ function hitTest(startX, startY) {
             hideBlack();
          });
 
-
         },
         error: function (xhr, err) {
-          $("#save-result").html("Someting went wrong...try again or not...");
+          $("#save-result").html("Someting went wrong...Please try again...");
+        },
+        fail: function(xhr) {
+          $("#save-result").html("Dabs höndlar ekki svona flotta mynd...");
         }
       });
 
   }
-
-  $("#save").click( function() {
-    $("#blackout").show();
-    $("#saveBox").show();
-  });
 
 
   function load(id) {
@@ -688,7 +638,6 @@ function hitTest(startX, startY) {
           tempCanvas.width = tempCanvas.width;
 
           var object = JSON.parse(data.WhiteboardContents);
-          console.log(object);
           shapeArr = object;
           drawFomArray(shapeArr);
           setup();
@@ -697,20 +646,24 @@ function hitTest(startX, startY) {
         },
         error: function (xhr, err) {
           // Something went wrong...
+          alert("You broke it...try again...");
 
         }
       });
-
-
   }
 
-  $("#load").click( function() {
-        // load();
-        $("#blackout").show();
-        $("#loadBox").show();
-      });
+  function showBlack(what) {
+    if (what === 'load') {
+      $("#blackout").show();
+      $("#loadBox").show();  
+    } else if (what === 'save') {
+      $("#blackout").show();
+      $("#saveBox").show();
+    }
+  }
 
   function getResult(user) {
+  $(".ajax-load").show();
    var param = {
     "user": user, 
     "template": true
@@ -724,7 +677,7 @@ function hitTest(startX, startY) {
     crossDomain: true,
     success: function (data) {
 
-          // The save was successful...
+          $(".ajax-load").hide();
 
           var resultHTML = $("#load-result");
           resultHTML.html("");
@@ -735,14 +688,13 @@ function hitTest(startX, startY) {
           }
 
           for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
+
             var id = data[i].ID;
             var name = data[i].WhiteboardTitle;
             resultHTML.append("<li class='load-data' id=" + id + "><a href=#>" + name + "</a></li>");
 
           }
           resultHTML.append("</ul>");
-          // console.log(data);
 
           $(".load-data").click( function() {
             $("#blackout").hide();
@@ -752,17 +704,11 @@ function hitTest(startX, startY) {
 
         },
         error: function (xhr, err) {
-          // Something went wrong...
-          console.log(xhr);
-          // console.log(err);
+          // Something went wrong..
+          resultHTML.html("Error. Please try again.");
         }
       });
 }
-
-$("#search").click( function() {
-  var user = $("#artist-name-load").val()
-  getResult(user);
-});
 
 function hideBlack() {
     $("#save-result").html("");
@@ -771,21 +717,41 @@ function hideBlack() {
   $(".overlay-box").hide();
 }
 
-$(".cancel, #blackout").click( function() {
-  hideBlack();
-});
 
-$("#saveOK").click(function() {
-  save();
-});
+function showHints() {
+  $("#blackout").show();
+  $("#shortcuts").show();
+}
+
+
+function shuffleHints() {
+  var n = Math.floor(Math.random() * (4 - 0 + 1) + 0);
+
+  var tip0 = "This app has shortcuts...press 'H' to see them... ";
+  var tip1 = "Control this app with your voice! Say 'Blue' (does not work on localhost)... ";
+  var tip2 = "If you press More you get more hints (only 4 hints)... ";
+  var tip3 = "All shortcuts can be controlled with your voice! Press 'H' to see them...";
+  var tip4 = "This app has been tested on Chrome and Safari (voice only works on chrome)";
+
+  if (n === 0 ) {
+    $("#panel-text").html(tip0);
+  } else if (n === 1) {
+    $("#panel-text").html(tip1);
+  } else if (n === 2) {
+    $("#panel-text").html(tip2);
+  } else if (n === 3) {
+    $("#panel-text").html(tip3);
+  } else if (n === 4) {
+    $("#panel-text").html(tip4);
+  }
+}
 
 $(".change-font").on('change', function() {
   if (tool === 'text') {
     $("#text-box").focus();
     fontName = $("#font-selector").val();
     fontsize = $("#font-size").val();
-    console.log(fontName);
-    console.log(fontsize);
+
     $("#text-box").css('font-family',fontName);
     $("#text-box").css('color', "#" + cColor);
     $("#text-box").css('font-size', fontsize + "px");
@@ -797,16 +763,123 @@ $("#currentColor").mouseenter( function() {
   $(".colors").show(); 
 });
 
+ $("#drawing-name, #artist-name").keyup(function(e) {
+    if (e.keyCode === 13) {
+      save();
+    }
+});
+
+  $("#artist-name-load").keyup(function(e) {
+
+    if (e.keyCode === 13) {
+      var user = $("#artist-name-load").val()
+      getResult(user);
+    }
+});
+//click functions...
+
 $(window).click(function() {
   $(".colors").hide(); 
 });
 
+$("#undo").click(undo);
+
+$("#redo").click(redo);
+
+$("#clearBoard").click(clearBoard);
+
+$(".color").click( function() {
+  changeColor(this.id);
+});
+$(".tool").click( function() {
+    changeTool(this.id);
+});
+
+$(".cancel, #blackout").click( hideBlack );
+$("#saveOK").click(save);
+$("#search").click( function() {
+  var user = $("#artist-name-load").val()
+  getResult(user);
+});
+$("#save").click( function() {
+  showBlack('save');
+});
+
+$("#load").click( function() {
+  showBlack('load');
+});
+
+$(".more-hints").click( function() {
+  shuffleHints();
+});
+
 setup();
+shuffleHints();
+
+//shortcuts!
+
+$(window).keydown(function(e) {
+  console.log(e);
+  if (tool != 'text') {
+  if(e.shiftKey || e.ctrlKey){
+  
+      if(e.which === 90) {
+        undo();
+      }
+      if(e.which === 89) {
+        redo();
+      }
+      
+      if(e.which === 83) {
+        showBlack('save');
+      }
+      if(e.which === 79) {
+        showBlack('load');
+      }
+      if(e.which === 78) {
+        clearBoard();
+      }
+  }
+
+  if (!e.shiftKey || !e.ctrlKey) {
+
+    if (e.keyCode === 80) {
+      changeTool('pencil');
+    }
+    if (e.keyCode === 82) {
+      changeTool('rect');
+    }
+    if (e.keyCode === 67) {
+      changeTool('circle');
+    }
+    if (e.keyCode === 76) {
+      changeTool('line');
+    }
+    if (e.keyCode === 84) {
+      changeTool('text');
+    }
+    if (e.keyCode === 83) {
+      changeTool('select');
+    }
+    if (e.keyCode === 70) {
+      $("#filled").trigger('click');
+    }
+    if (e.keyCode === 27) {
+      hideBlack();
+    }
+    if (e.keyCode === 72) {
+      showHints();
+    }
+   
+  }
+}
+   // e.preventDefault();
+
+});
 
 //SpeechRecognition support!
 
 if (annyang) {
-  console.log("Listening");
 
   var commands = {
     'undo': function () {
@@ -816,31 +889,54 @@ if (annyang) {
       redo();
     },
     'red':function() {
-      changeColor('red');
+      changeColor('b40000');
     },
     'blue':function() {
-      changeColor('blue');
+      changeColor('1e5aa8');
     },
     'yellow':function() {
-      changeColor('yellow');
+      changeColor('fac80a');
     },
     'white':function() {
-      changeColor('white');
+      changeColor('ffffff');
     },
     'black':function() {
-      changeColor('black');
+      changeColor('000000');
     },
     'green':function() {
-      changeColor('green');
+      changeColor('b1c93e');
     },
-    '*term':function(term){
-      console.log(term);
+    'pencil':function() {
+      changeTool('pencil');
+    },
+    'rectangle':function() {
+      changeTool('rect');
+    },
+    'circle':function() {
+      changeTool('circle');
+    },
+    'line':function() {
+      changeTool('line');
+    },
+    'text':function() {
+      changeTool('text');
+    },
+    'select':function() {
+      changeTool('select');
+    },
+    'save':function() {
+      showBlack('save');
+    },
+    'safe':function() {
+      showBlack('save');
+    },
+    'load':function() {
+      showBlack('load');
     }
 
   };
 
   annyang.addCommands(commands);
-
   annyang.start();
 
 }

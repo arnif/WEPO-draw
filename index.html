@@ -12,7 +12,7 @@
 
 <body>
  <div id="container">
-      <canvas id="myCanvas" width="800" height="400">
+      <canvas id="myCanvas" width="800" height="450">
         <p>Unfortunately, your browser is currently unsupported by our web 
         application.  We are sorry for the inconvenience. Please use one of the 
         supported browsers listed below, or draw the image you want using an 
@@ -26,7 +26,23 @@
 
 
     </div>
+
+    
 <div id="tool-box">
+
+  <div id="hints">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+    <h5 class="panel-title">Did you know?</h5>
+  </div>
+  <div class="panel-body"><span id="panel-text">
+    </span>
+    <a href="#" class="more-hints">More</a>
+  </div>
+  </div>
+
+
+    </div>
 
   <div id="tools">
   <div class="list-group">
@@ -112,7 +128,7 @@
     <div id="blackout"></div>
 
   <div id="saveBox" class="overlay-box">
-  <h3>Save image</h3>
+  <h3>Save image <img class="ajax-load" src="img/loader.gif" alt="loading" /></h3>
   <input id="artist-name" class="form-control" type="text" placeholder="Artist Name" />
   <input id="drawing-name" class="form-control" type="text" placeholder="Drawing Name" />
   <div id="save-result">
@@ -124,13 +140,33 @@
 </div>
 
 <div id="loadBox" class="overlay-box">
-  <h3>Load image</h3>
+  <h3>Load image <img class="ajax-load" src="img/loader.gif" alt="loading" /></h3>
   <input id="artist-name-load" class="form-control" type="text" placeholder="Artist Name" />
   <div id="load-result"></div>
   <div id="save-btns">
   <button id="search" class="save-btn btn btn-lg btn-primary">Search</button>
   <button class="cancel save-btn btn btn-lg btn-danger">cancel</button>
 </div>
+</div>
+
+<div id="shortcuts" class="overlay-box">
+  <h3>Shortcuts</h3>
+  <p>Mac users can use <strong>Ctrl</strong> instead of <strong>Shift</strong></p>
+  <ul class="list-group">
+  <li class="list-group-item"><strong>P</strong> = Pencil</li>
+  <li class="list-group-item"><strong>R</strong> = Rectangle</li>
+  <li class="list-group-item"><strong>C</strong> = Circle</li>
+  <li class="list-group-item"><strong>L</strong> = Line</li>
+  <li class="list-group-item"><strong>T</strong> = Text</li>
+  <li class="list-group-item"><strong>Shift + N</strong> = New</li>
+  <li class="list-group-item"><strong>Shift + O</strong> = Open</li>
+  <li class="list-group-item"><strong>Shift + S</strong> = Save</li>
+  <li class="list-group-item"><strong>Shift + Z</strong> = Undo</li>
+  <li class="list-group-item"><strong>Shift + Y</strong> = Redo</li>
+</ul>
+<p>Press <strong>Esc</strong> to close</p>
+
+  </div>
 
 </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
